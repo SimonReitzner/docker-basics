@@ -1,0 +1,24 @@
+services:
+  database:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: ${CONTAINER_NAME:-mongodb}
+    networks:
+      - database
+    restart: always
+    ports:
+      - ${PORT:-27017}:27017
+    volumes:
+      - ${MONGO_CONFIG_FILE_PATH:-./mongod.conf}:/etc/mongo/mongod.conf
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+
+
+networks:
+  database:
+
+volumes:
+  mongodb_data:

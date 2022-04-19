@@ -1,0 +1,30 @@
+services:
+  database:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: ${CONTAINER_NAME:-postgres}
+    user: postgres
+    networks:
+      - database
+    restart: always
+    ports:
+      - ${PORT:-5432}:5432
+    volumes:
+      - ${POSTGRES_CONFIG_FILE_PATH:-./postgres.conf}:/etc/postgresql/postgresql.conf
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+networks:
+  database:
+
+
+volumes:
+  postgres_data:
